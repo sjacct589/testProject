@@ -1,0 +1,244 @@
+    <!DOCTYPE html>  
+    <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                <!--qq强制竖屏 -->
+                <meta name="x5-orientation"  content="portrait">
+                <!--uc强制竖屏 -->
+                <meta name="screen-orientation"  content="portrait">
+        <title>手机客户端下载</title>  
+        <script src="jquery-1.7.2.min.js"></script>  
+        <style>  
+            body {  
+                width: 100%;  
+                margin: 0 auto;  
+                background-color: #004285;  
+            }  
+            html, body, div, h1, h2, h3, h4, h5, h6,ul,li,  ol, dl, dt, dd, blockquote, pre, form, fieldset, table, th, td, span,input{padding:0;margin:0px auto;font-family: Adobe Heiti Std,微软雅黑,sans-serif;}  
+            li{ text-decoration:none; list-style-type:none;}  
+            ul{ list-style-type:disc;}  
+            .clearfix:after{clear:both;display: block;content: "...";visibility: hidden;height: 0;font-size: 0;}  
+            .clearfix{*zoom:1;}  
+            a{ color: #000;text-decoration: none;font-family: Adobe Heiti Std,微软雅黑,sans-serif;font-size: 14px;}  
+            .red{ color: #cc0000;}  
+            .Client_download  
+            {  
+                margin: 0px auto;  
+                max-width: 640px;  
+                width: 100%;  
+                height: 100%;  
+                background: url("background.png") no-repeat;  
+                -moz-background-size: 100% 100%;  
+                background-size: 100% 100%;  
+            } 
+           .show_img{  
+                width: 100%;  
+                height: auto;  
+                border: 0px; 
+                margin-top:105%; 
+			}
+            .Client_download_iPhone  
+            {  
+                width: 70%;  
+                height: 70px;
+                /* float: left;*/  
+                margin-top: 0px;               
+            } 
+            .Client_download_Android  
+            {  
+                width: 70%;  
+                height: 70px;    
+                /*float: right;*/  
+                margin-top: 0px;  
+            }
+			
+            #view_1{display: none; position: fixed; left:0; top:0; bottom:0; 
+                        background: rgba(0,0,0,0.8); filter:alpha(opacity=80); 
+                         height: 100%; width: 100%; z-index: 100;}
+            #view_1 img{max-width: 100%; height: auto;} 
+            #view_3{display: none; position: fixed; left:0; top:0; bottom:0; 
+                        background: rgba(0,0,0,0.8); filter:alpha(opacity=60); 
+                         height: 100%; width: 100%; z-index: 100;}
+            #view_3 img{max-width: 90%; max-height: 100%}  /*height: auto;*/
+        </style>  
+    </head>  
+    <body onorientationchange="updateOrientation()">	
+    <div class="container" id="view_1" >  
+        <img src="live_weixin.png" alt="微信打开"/> 
+    </div>  	
+    <div class="Client_download" id="view_2" style="height: 1006px;display:block;">  
+        <div class="Client_download_iPhone">  
+            <a class="J-call-app" id="ios_a" href="javascript:void(0)">  
+                <img class="show_img" alt="苹果IOS下载" src="ios.png" onclick="click_one()"></a>  
+        </div>  
+        <div class="Client_download_Android">  
+            <a class="J-call-app" id="android_a" href="javascript:void(0)">  
+                <img class="show_img" alt="安卓APP下载" src="android.png" onclick="click_one()"></a>  
+        </div>  
+    </div> 
+    <div id="view_3" >  
+        <img src="tishi.png" alt="提示遮罩"/> 
+    </div> 
+    
+<!-- 以下为xinstall集成代码，建议在html文档中尽量靠前放置，加快初始化过程 -->
+<!-- 强烈建议直接引用下面的cdn加速链接，可以得到最及时的更新，我们将持续跟踪各种主流浏览器的变化，提供最好的服务；不推荐将此js文件下载到自己的服务器-->
+<script type="text/javascript" charset="UTF-8" src="//cdn.xinstall.com/xinstall.js"></script>
+<script type="text/javascript">
+  //xinstall初始化，xinstall初始化时将与xinstall服务器交互，应尽可能早的调用
+  /*web页面向app传递的json数据(json string/js Object)，应用被拉起或是首次安装时，通过相应的ios api可以获取此数据*/
+  var data = XInstall.parseUrlParams(); //xinstall.js中提供的工具函数，解析url中的所有查询参数
+  new XInstall({
+    /*appKey必选参数，xinstall平台为每个应用分配的appKey*/
+    appKey : "17z4lqu",
+    /*可选项，微信中打开自定义遮罩层*/
+    //mask:function(){
+    //  return "<div style='background:rgba(0,0,0,.5);position:fixed;left:0;top:0;filter:alpha(opacity=50);width:100%;height:100%;z-index:9999;'><div style='text-align:right; margin-top:1%; margin-right:5%;'><img style='width:70%; margin:0 auto;' src='https://cdn.xinstall.com/image/no_safari.png'/></div></div>"
+    //},
+    /*可选项，按钮携带特殊参数安装，idName(按钮的id值)，params(当前按钮点击携带的传入值，传入类型强制为Array[Object])*/
+    //buttonId: [
+    //   { idName: 'downOne', params: {dataA: 'downOne', da: '1'} },
+    //   { idName: 'downTwo', params: {dataB: 'downTwo', d: 'abc', c: 'cba'} },
+    //   { idName: 'downThree' }
+    // ],
+    /*xinstall初始化完成的回调函数，可选*/
+    onready : function() {
+      var m = this;
+      var button=null;
+      var ua = navigator.userAgent.toLowerCase();
+     if(ua.match(/android/i) == "android")  
+     {  
+        //alert("android");  
+        button = document.getElementById("android_a");   
+     }  
+    if(ua.match(/iPhone/i) == "iPhone" || ua.match(/iPad/i) == "iPad")  
+     {  
+       //alert("iPhone or iPad"); 
+       button = document.getElementById("ios_a");        
+     }  
+      
+      //button.style.visibility = "visible";
+      /*用户点击某个按钮时(假定按钮id为downloadButton)，安装app*/
+      button.onclick = function() {
+        m.wakeupOrInstall();
+      }
+    }
+  }, data);
+</script>
+
+        <script>
+            var ua = navigator.userAgent.toLowerCase();  
+            var t;  
+           /* var config = {  
+                //scheme:必须  
+                scheme_IOS: 'MobileMall://',  
+                scheme_Adr: 'com.softbest1.mall://app/openwith',  
+                download_ios_url: "itms-services://?action=download-manifest&url=https://gametest160.com/gameapp/installIPA.plist",  
+                download_android_url: "http://gametest160.com/gameapp/tuibinzi20180130.apk",  
+                timeout: 100  
+            };
+            */
+             // 监听a标签允许点击一次
+            var count=1;
+            function click_one(){               
+              /*  if(count){
+                    if (browser.versions.ios||browser.versions.iPad) {
+                        window.location.href=config.download_ios_url;
+                        $("#view_3").show();                       
+                    }
+                    else if (browser.versions.android) {
+                        window.location.href=config.download_android_url;
+                    }
+                    count=0;                   
+                }
+                // alert(count);
+                //$(".J-call-app").unbind("click");
+                //setTimeout('$(".J-call-app").bind("click",test)',5000);
+              */
+            };
+           /* function openclient() {  
+                $(".Client_download").height($(".Client_download").width() * 1006 / 640 + "px");  
+                if(ua.indexOf('os') > 0){       
+                    var btn = document.getElementById("ios_a");   
+                    btn.click();
+                } else {  
+                    var btn = document.getElementById("android_a");   
+                    btn.click();   
+                }  
+            }  
+            */
+           // $(".J-call-app").click(openclient);  
+            var browser = {  
+                versions: function () {  
+                    var u = navigator.userAgent, app = navigator.appVersion;  
+                    return {  
+                        //移动终端浏览器版本信�?  
+                        //trident: u.indexOf('Trident') > -1, //IE内核   
+                        //presto: u.indexOf('Presto') > -1, //opera内核   
+                        //webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内�?  
+                        //gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核   
+                        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终�?  
+                        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端   
+                        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览�?  
+                        //iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览�?  
+                        iPad: u.indexOf('iPad') > -1, //是否iPad   
+                        //webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部,  
+                        WeiXin: u.match(/MicroMessenger/i) == "MicroMessenger" //是否为微信客户端  
+                    };  
+                }(),  
+                language: (navigator.browserLanguage || navigator.language).toLowerCase()  
+            }; 
+            $(window).on("load", function(){
+                var winHeight = $(window).height();
+                function is_weixin(){
+                    var ua = navigator.userAgent.toLowerCase();  
+                    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                        return true;
+                    }else{
+                        return false;
+                    } 
+                }
+                $(".Client_download").height($(".Client_download").width() * 1006 / 640 + "px")
+                
+                var is_weixin = is_weixin()
+                if (is_weixin) { 
+                    $("#view_1").css("height", winHeight); 
+                    $("#view_1").show();
+                    $("#view_3").hide();
+                    //openclient(); 
+                    if (browser.versions.ios||browser.versions.iPad) {                   
+                        $(".Client_download_Android").hide();  
+                        $(".Client_download_iPhone").show();  
+                        InfoStatistics("IOS");           
+                    } else if (browser.versions.android) {                  
+                        $(".Client_download_iPhone").hide();  
+                        $(".Client_download_Android").show();  
+                        InfoStatistics("Android");             
+                    }  
+                }else {  
+                //$(".Client_download").hide();  
+                   // openclient();  
+                    if (browser.versions.ios||browser.versions.iPad) {                   
+                        $(".Client_download_Android").hide();  
+                        $(".Client_download_iPhone").show();  
+                        InfoStatistics("IOS");           
+                    } else if (browser.versions.android) {                  
+                        $(".Client_download_iPhone").hide();  
+                        $(".Client_download_Android").show();  
+                        InfoStatistics("Android");             
+                    }  
+                }
+                //alert(count)
+                /*if (count=0) {
+                    $("#view_3").css("height", winHeight); 
+                    $("#view_3").show();
+                }*/
+               
+            }); 
+            $(function () {  
+                $(".Client_download").height($(".Client_download").width() * 1006 / 640 + "px");  
+            });  
+            function InfoStatistics(Platform) {     
+                console.log("-----"+Platform);  
+            }  
+        </script>  
+    </div>  
+    </body></html>  
